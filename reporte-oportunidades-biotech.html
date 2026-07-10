@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte de Oportunidades · Hedge-Fund-AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f5; --doc:#ffffff;
+    --ink:#101a2e; --ink-2:#33404d; --muted:#6b7580; --faint:#93a0ad;
+    --line:#e4e7ec; --line-2:#eef0f2;
+    --blue:#1d4ed8; --blue-deep:#1e3a8a; --blue-tint:#eef4ff;
+    --amber:#b45309; --amber-tint:#fef7ec;
+    --red:#c2410c; --red-tint:#fdf1ec; --green:#047857; --green-tint:#ecfdf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;line-height:1.6}
+
+  .doc{max-width:920px;margin:34px auto;background:var(--doc);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(16,24,40,.04),0 24px 60px -34px rgba(16,24,40,.22)}
+
+  /* hero */
+  .head{padding:60px 56px 50px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+        min-height:340px;display:flex;flex-direction:column;justify-content:center;
+        background-color:#030712;
+        background-image:linear-gradient(94deg, rgba(3,7,18,.93) 0%, rgba(3,7,18,.68) 34%, rgba(3,7,18,.22) 62%, rgba(3,7,18,0) 82%),
+                         url('assets/hero-wireframe-blue.jpg');
+        background-size:cover;background-position:center center}
+  .head::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;z-index:2;
+        background:linear-gradient(90deg,var(--blue),#3b82f6 55%,#60a5fa)}
+  .head > *{position:relative;z-index:1}
+  .eyebrow{display:flex;align-items:center;gap:9px;font-family:"IBM Plex Mono",monospace;
+        font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7fb2ff;font-weight:500}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#7fb2ff;box-shadow:0 0 12px #7fb2ff}
+  h1{font-family:"Fraunces",serif;font-weight:700;font-size:44px;line-height:1.04;
+        letter-spacing:-.02em;margin:16px 0 14px;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+  h1 em{font-style:italic;color:#7fb2ff}
+  .sub{font-size:15.5px;color:#cdd9ee;max-width:60ch;line-height:1.55;text-align:justify;hyphens:auto}
+  .meta{margin-top:20px;display:flex;gap:24px;flex-wrap:wrap;font-size:12.5px;color:#93a6c6}
+  .meta b{color:#fff}
+
+  section{padding:32px 56px;border-top:1px solid var(--line-2)}
+  h2{font-family:"Fraunces",serif;font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--ink);
+        margin-bottom:6px;display:flex;align-items:baseline;gap:12px}
+  h2 .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--blue);font-weight:500;letter-spacing:.05em}
+  .h2note{font-size:14.5px;color:var(--muted);margin-bottom:18px;max-width:70ch;text-align:justify;hyphens:auto}
+  p{font-size:15px;color:var(--ink-2)}
+
+  /* funnel */
+  .funnel{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .fstep{flex:1;min-width:120px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fcfdff}
+  .fstep .n{font-family:"Fraunces",serif;font-weight:700;font-size:26px;color:var(--blue-deep);line-height:1}
+  .fstep .l{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.4}
+
+  /* sources strip */
+  .srcstrip{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .schip{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--blue-deep);background:var(--blue-tint);
+        border:1px solid #d3e0fb;border-radius:7px;padding:5px 10px}
+  .schip.web{color:var(--amber);background:var(--amber-tint);border-color:#f3e2c8}
+
+  /* opportunity card */
+  .opp{border:1px solid var(--line);border-radius:16px;padding:0;margin-top:20px;overflow:hidden;background:#fff}
+  .opp:first-of-type{margin-top:6px}
+  .opp-head{display:flex;align-items:flex-start;gap:16px;padding:20px 24px;border-bottom:1px solid var(--line-2);
+        background:linear-gradient(180deg,#fcfdff,#f7f9fd)}
+  .rank{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--blue-deep);color:#fff;
+        font-family:"Fraunces",serif;font-weight:700;font-size:17px;display:grid;place-items:center}
+  .tk{flex-shrink:0}
+  .tk .sym{font-family:"Fraunces",serif;font-weight:700;font-size:27px;color:var(--ink);letter-spacing:-.01em;line-height:1}
+  .tk .co{font-size:12px;color:var(--muted);margin-top:3px}
+  .tk .px{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--blue-deep);margin-top:4px}
+  .badges{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .verdict{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;letter-spacing:.04em;
+        padding:5px 11px;border-radius:8px;text-align:right;white-space:nowrap}
+  .v-go{color:var(--blue-deep);background:var(--blue-tint);border:1px solid #d3e0fb}
+  .v-wait{color:var(--amber);background:var(--amber-tint);border:1px solid #f3e2c8}
+  .v-avoid{color:var(--red);background:var(--red-tint);border:1px solid #f4d6c8}
+  .conv{font-size:11px;color:var(--muted);letter-spacing:.03em}
+  .conv b{color:var(--ink)}
+
+  .opp-body{padding:20px 24px}
+
+  /* levels */
+  .levels{display:grid;grid-template-columns:1.1fr 1fr 2.2fr;gap:10px;margin-bottom:16px}
+  .lv{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:#fcfdff}
+  .lv .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:5px}
+  .lv.pe{border-top:3px solid var(--blue)} .lv.pe .tag{color:var(--blue)}
+  .lv.sl{border-top:3px solid var(--red)} .lv.sl .tag{color:var(--red)}
+  .lv.tp{border-top:3px solid var(--green)} .lv.tp .tag{color:var(--green)}
+  .lv .big{font-family:"Fraunces",serif;font-weight:600;font-size:18px;color:var(--ink);line-height:1.1}
+  .lv .sm{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .tps{display:flex;gap:14px;flex-wrap:wrap}
+  .tps .t{font-size:12.5px;color:var(--ink-2)}
+  .tps .t b{font-family:"IBM Plex Mono",monospace;color:var(--green);font-weight:500}
+  .tps .t .rr{color:var(--muted);font-size:11px}
+
+  /* data grid */
+  .dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-2);
+        border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin-bottom:16px}
+  .dcell{background:#fff;padding:10px 13px}
+  .dcell .k{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;font-family:"IBM Plex Mono",monospace}
+  .dcell .v{font-size:13.5px;color:var(--ink);font-weight:600;margin-top:2px;line-height:1.25}
+  .dcell .v.pos{color:var(--green)} .dcell .v.neg{color:var(--red)} .dcell .v.warn{color:var(--amber)}
+
+  /* callouts */
+  .cat{border-radius:11px;padding:13px 16px;margin-bottom:14px;background:var(--amber-tint);border:1px solid #f3e2c8;border-left:3px solid var(--amber)}
+  .cat .h{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:4px}
+  .cat p{font-size:13.5px;color:var(--ink-2);text-align:justify;hyphens:auto}
+  .cat .date{color:var(--amber);font-weight:600}
+
+  .pipe{font-size:13px;color:var(--ink-2);background:var(--blue-tint);border:1px solid #d3e0fb;border-radius:10px;
+        padding:11px 15px;margin-bottom:14px;text-align:justify;hyphens:auto}
+  .pipe b{color:var(--blue-deep)}
+  .pipe .lab{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-weight:500;margin-right:6px}
+
+  .thesis{font-size:14px;color:var(--ink-2);line-height:1.6;margin-bottom:14px;text-align:justify;hyphens:auto}
+  .thesis b{color:var(--ink)}
+  .thesis .lab{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:5px}
+
+  /* scenarios */
+  .scen{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .sc{border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+  .sc .h{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:5px}
+  .sc.up{background:var(--green-tint);border-color:#c6f0dd} .sc.up .h{color:var(--green)}
+  .sc.mid{background:#fcfdff} .sc.mid .h{color:var(--muted)}
+  .sc.down{background:var(--red-tint);border-color:#f4d6c8} .sc.down .h{color:var(--red)}
+  .sc p{font-size:12px;color:var(--ink-2);line-height:1.45}
+
+  /* news */
+  .news{border-top:1px dashed var(--line);padding-top:12px}
+  .news .lab{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:7px}
+  .news ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .news li{font-size:12.5px;color:var(--ink-2);display:flex;gap:9px;line-height:1.4}
+  .news li .nd{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--blue);flex-shrink:0;min-width:62px}
+  .news li .ns{color:var(--faint);font-size:11px}
+
+  /* excluded */
+  .excl{border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-top:12px;background:#fbfbfc}
+  .excl .row{display:flex;gap:14px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-2)}
+  .excl .row:first-child{border-top:none}
+  .excl .esym{font-family:"Fraunces",serif;font-weight:700;font-size:17px;color:var(--muted);min-width:64px}
+  .excl .ewhy{font-size:13px;color:var(--ink-2);text-align:justify;hyphens:auto}
+  .excl .ewhy b{color:var(--red)}
+
+  .disc{font-size:12.5px;color:var(--muted);background:#fcfdff;border:1px solid var(--line);border-radius:11px;padding:14px 18px;line-height:1.55;text-align:justify;hyphens:auto}
+  .disc b{color:var(--ink-2)}
+
+  footer{padding:22px 56px 32px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;
+        display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
+
+  @media(max-width:760px){
+    .doc{margin:0;border-radius:0;border:none}
+    .head,section{padding-left:22px;padding-right:22px}
+    .opp-body{padding:16px}
+    footer{padding-left:22px;padding-right:22px}
+    h1{font-size:32px}
+    .levels,.scen{grid-template-columns:1fr}
+    .dgrid{grid-template-columns:repeat(2,1fr)}
+    .badges{margin-left:0}
+    .opp-head{flex-wrap:wrap}
+  }
+  @media print{
+    body{background:#fff} .doc{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0}
+    @page{margin:12mm}
+    .opp,section,.head{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<article class="doc">
+
+  <header class="head">
+    <div class="eyebrow"><span class="dot"></span> Hedge-Fund-AI · Reporte de Oportunidades</div>
+    <h1>Oportunidades biotech <em>por catalizador</em></h1>
+    <p class="sub">Barrido de la pantalla de momentum del sector, ocho finalistas pasados por el motor de datos reales y seis investigados en vivo. Cada nombre trae entrada, stop y objetivos calculados desde la estructura de precio, más el catalizador clínico, la calidad del pipeline y el flujo institucional. Cinco se presentan; tres se excluyen con su razón explícita.</p>
+    <div class="meta"><span>Fecha · <b>09-JUL-2026</b></span><span>Universo · <b>momentum biotech</b></span><span>Presentadas · <b>5</b></span><span>Excluidas · <b>3</b></span></div>
+  </header>
+
+  <section>
+    <h2><span class="idx">01</span> Cómo se filtró</h2>
+    <p class="h2note">El embudo va de la pantalla completa a los pocos nombres con confluencia real. Nada se presenta sin pasar por el motor y por la investigación del catalizador.</p>
+    <div class="funnel">
+      <div class="fstep"><div class="n">15</div><div class="l">Pantalla de momentum: relvol &gt;1.5, sobre SMA20 y SMA50, semana al alza</div></div>
+      <div class="fstep"><div class="n">8</div><div class="l">Filtrados a biotech/pharma por catalizador (se descartan devices, seguros, REIT)</div></div>
+      <div class="fstep"><div class="n">8</div><div class="l">Pasados por el motor: PE / SL / TP, insider, short, runway, EDGAR</div></div>
+      <div class="fstep"><div class="n">6</div><div class="l">Con identidad verificable e investigados en vivo (catalizador + pipeline)</div></div>
+      <div class="fstep"><div class="n">5</div><div class="l">Presentados con tesis y escenarios; 3 excluidos con su razón</div></div>
+    </div>
+    <div style="margin-top:16px" class="srcstrip">
+      <span class="schip">Massive / Polygon · precio + técnicos</span>
+      <span class="schip">Finviz Elite · insider + volumen</span>
+      <span class="schip">FMP · runway + analistas</span>
+      <span class="schip">SEC EDGAR · 13D/13G</span>
+      <span class="schip web">Perplexity · catalizador FDA (web)</span>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span> Las oportunidades</h2>
+    <p class="h2note">Ordenadas por accionabilidad y calidad. La entrada de varias está condicionada a un evento (ruptura o pullback): entrar antes de esa confirmación es asumir el riesgo sin la señal.</p>
+
+    <!-- ===================== PHAT ===================== -->
+    <div class="opp">
+      <div class="opp-head">
+        <div class="rank">1</div>
+        <div class="tk"><div class="sym">PHAT</div><div class="co">Phathom Pharmaceuticals</div><div class="px">$12.16 · float 79.8M · earnings 06-AGO (28d)</div></div>
+        <div class="badges"><span class="verdict v-go">SETUP VÁLIDO · entrada en ruptura</span><span class="conv">Convicción · <b>ALTA</b></span></div>
+      </div>
+      <div class="opp-body">
+        <div class="levels">
+          <div class="lv pe"><div class="tag">Entrada · PE</div><div class="big">$12.28 a $12.46</div><div class="sm">Ruptura de la base con volumen</div></div>
+          <div class="lv sl"><div class="tag">Stop · SL</div><div class="big">$9.43</div><div class="sm">Bajo el piso de la base (riesgo $3.03/acc)</div></div>
+          <div class="lv tp"><div class="tag">Objetivos · TP</div>
+            <div class="tps"><div class="t"><b>$18.31</b> <span class="rr">T1 · R/R 1.9</span></div><div class="t"><b>$23.07</b> <span class="rr">T2 · 3.5</span></div><div class="t"><b>$30.64</b> <span class="rr">T3 · 6.0</span></div></div>
+          </div>
+        </div>
+        <div class="dgrid">
+          <div class="dcell"><div class="k">Estructura</div><div class="v pos">Base pre-ruptura</div></div>
+          <div class="dcell"><div class="k">Vol. relativo</div><div class="v pos">1.88x</div></div>
+          <div class="dcell"><div class="k">Short / DTC</div><div class="v">14.0% · 10.4d</div></div>
+          <div class="dcell"><div class="k">Runway</div><div class="v pos">22.3 meses</div></div>
+          <div class="dcell"><div class="k">Target analistas</div><div class="v pos">$23 · +89%</div></div>
+          <div class="dcell"><div class="k">Consenso</div><div class="v">8 Buy · 1 Hold</div></div>
+          <div class="dcell"><div class="k">Institucional</div><div class="v pos">13D activista</div></div>
+          <div class="dcell"><div class="k">Insider (90d)</div><div class="v">0 compras · 0 ventas</div></div>
+        </div>
+        <div class="cat"><div class="h">Catalizador</div><p>Doble inflexión: la rampa comercial de <b>VOQUEZNA (vonoprazan)</b>, con ingresos FY25 de $175.1M (+217% interanual) y más de 1.1M de recetas, apuntando a <span class="date">rentabilidad operativa hacia el 3T 2026</span>; y el topline de <b>Fase 2 en esofagitis eosinofílica (pHalcon-EoE-201, 95 pts)</b> en el <span class="date">4T 2026</span>. Fuente: comunicados de Phathom (jun-2026) vía Perplexity.</p></div>
+        <div class="pipe"><span class="lab">Pipeline</span>Concentrado en <b>un solo fármaco</b> (vonoprazan) desplegado en varias indicaciones GI (GERD, esofagitis erosiva, H. pylori, EoE). No está diversificado, pero está de-riesgado por la aprobación y la venta real. <b>Financiación no dilutiva:</b> revenue interest de hasta $260M (Sagard/NovaQuest/Hercules), con $160M adicionales atados a la aprobación en EE.</div>
+        <div class="thesis"><span class="lab">Tesis</span>Es el <b>setup técnico más limpio</b> del grupo: única base pre-ruptura real (relvol 1.88), con un <b>13D activista de Frazier Life Sciences (8.5%)</b> respaldando. El motor de valor es comercial y ya visible (ingresos creciendo, camino a rentabilidad), lo que reduce el riesgo binario clásico de biotech. Se entra <b>en la ruptura sobre $12.46 con volumen</b>, no antes: al precio actual el R/R a T1 es 1.9, y solo la confirmación lo lleva sobre 2:1. Riesgo principal: concentración en un producto y una investigación legal menor (Rosen Law).</div>
+        <div class="scen">
+          <div class="sc up"><div class="h">Positivo</div><p>Rompe $12.46 con volumen, la rampa comercial sostiene el momentum hacia $18 a $23 (T1 a T2).</p></div>
+          <div class="sc mid"><div class="h">Intermedio</div><p>Sigue lateral bajo $12.46; se espera. La base se mantiene mientras respete $9.43.</p></div>
+          <div class="sc down"><div class="h">Negativo</div><p>Pierde $9.43 (piso de la base) o un dato comercial débil frena la tesis; se sale, idea invalidada.</p></div>
+        </div>
+        <div class="news"><div class="lab">Noticias que mueven la tesis</div><ul>
+          <li><span class="nd">23-JUN-26</span><div>Enrollment completo (adelantado) en Fase 2 EoE, topline 4T 2026 <span class="ns">· stocktitan / Yahoo Finance</span></div></li>
+          <li><span class="nd">FY 2025</span><div>Ingresos $175.1M (+217%), &gt;1.1M recetas, guía de rentabilidad operativa 3T 2026 <span class="ns">· Phathom IR</span></div></li>
+          <li><span class="nd">Aviso</span><div>Investigación de Rosen Law sobre posibles reclamos de accionistas <span class="ns">· rosenlegal.com</span></div></li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- ===================== XNCR ===================== -->
+    <div class="opp">
+      <div class="opp-head">
+        <div class="rank">2</div>
+        <div class="tk"><div class="sym">XNCR</div><div class="co">Xencor</div><div class="px">$16.11 · float 74.1M · earnings 05-AGO (27d)</div></div>
+        <div class="badges"><span class="verdict v-go">SETUP VÁLIDO · esperar pullback</span><span class="conv">Convicción · <b>ALTA</b></span></div>
+      </div>
+      <div class="opp-body">
+        <div class="levels">
+          <div class="lv pe"><div class="tag">Entrada · PE</div><div class="big">$14.21 a $14.79</div><div class="sm">Retroceso a la media (EMA20). No FOMO</div></div>
+          <div class="lv sl"><div class="tag">Stop · SL</div><div class="big">$11.07</div><div class="sm">Invalidación técnica (riesgo $3.72/acc)</div></div>
+          <div class="lv tp"><div class="tag">Objetivos · TP</div>
+            <div class="tps"><div class="t"><b>$25.75</b> <span class="rr">T1 · R/R 2.95</span></div><div class="t"><b>$27.81</b> <span class="rr">T2 · 3.5</span></div><div class="t"><b>$37.11</b> <span class="rr">T3 · 6.0</span></div></div>
+          </div>
+        </div>
+        <div class="dgrid">
+          <div class="dcell"><div class="k">Estructura</div><div class="v warn">Extendido (RSI 68)</div></div>
+          <div class="dcell"><div class="k">Vol. relativo</div><div class="v pos">1.63x</div></div>
+          <div class="dcell"><div class="k">Short / DTC</div><div class="v">15.2% · 16.2d</div></div>
+          <div class="dcell"><div class="k">Caja</div><div class="v pos">$541.8M · a 2028</div></div>
+          <div class="dcell"><div class="k">Target analistas</div><div class="v pos">$27 · +68%</div></div>
+          <div class="dcell"><div class="k">Consenso</div><div class="v pos">24 Buy · 2 Hold</div></div>
+          <div class="dcell"><div class="k">Institucional</div><div class="v">EcoR1 Capital</div></div>
+          <div class="dcell"><div class="k">Insider (12m)</div><div class="v neg">Ventas ~$5.9M</div></div>
+        </div>
+        <div class="cat"><div class="h">Catalizador</div><p>Activo líder <b>XmAb819 (ENPP3xCD3, cáncer renal ccRCC)</b>: Fase 1 con 25% de respuestas parciales y 70% de control de enfermedad; datos de expansión de dosis en <span class="date">2H 2026</span> para definir dosis pivotal, con estudio pivotal a iniciar en 2027. Segundo pilar <b>XmAb942 (TL1A) en colitis ulcerosa</b>, interino ciego a fin de 2026. Fuente: Xencor IR (ene y may 2026) vía Perplexity.</p></div>
+        <div class="pipe"><span class="lab">Pipeline</span><b>El más diversificado del grupo:</b> más de 20 programas XmAb en oncología y autoinmune, propios y de socios. <b>Validación no dilutiva fuerte:</b> royalties de Ultomiris (Xtend/AstraZeneca), Monjuvi/tafasitamab, sotrovimab (Vir), venta de royalties a OMERS por $215M, y co-desarrollo con Janssen (80/20). No depende de un solo binario.</div>
+        <div class="thesis"><span class="lab">Tesis</span>Es el nombre de <b>mayor calidad y menor riesgo</b> del grupo: pipeline diversificado, la <b>caja más fuerte ($541.8M, runway hasta mediados de 2028)</b> que casi elimina la presión de dilución, el respaldo de analistas más profundo (24 Buy) y el mejor R/R limpio (2.95). Se entra en el <b>retroceso a $14.21 a $14.79</b>, no persiguiendo el precio extendido. Riesgos a vigilar: los ejecutivos vendieron ~$5.9M en 12 meses y hay una <b>disputa con Alexion sobre el royalty de Ultomiris en EE</b> (marzo 2026) que resta $100 a $120M, aunque la caja aguanta igual.</div>
+        <div class="scen">
+          <div class="sc up"><div class="h">Positivo</div><p>Pullback a la media y rebote; datos de XmAb819 en 2H26 revalorizan hacia $25 a $27 (T1 a T2).</p></div>
+          <div class="sc mid"><div class="h">Intermedio</div><p>Consolida entre EMA20 y EMA50; la caja da tiempo. Se acumula en debilidad.</p></div>
+          <div class="sc down"><div class="h">Negativo</div><p>Pierde $11.07, o la disputa del royalty escala; se sale. La tesis de calidad no cubre una ruptura técnica.</p></div>
+        </div>
+        <div class="news"><div class="lab">Noticias que mueven la tesis</div><ul>
+          <li><span class="nd">06-MAY-26</span><div>Q1 2026: caja $541.8M, runway reiterado a mediados de 2028 <span class="ns">· Xencor IR</span></div></li>
+          <li><span class="nd">04-MAR-26</span><div>Alexion disputa el royalty de Ultomiris en EE (resta $100 a $120M) <span class="ns">· Businesswire</span></div></li>
+          <li><span class="nd">08-ENE-26</span><div>Prioridades 2026: XmAb819 líder, datos 2H26, pivotal 2027 <span class="ns">· Xencor IR</span></div></li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- ===================== ANNX ===================== -->
+    <div class="opp">
+      <div class="opp-head">
+        <div class="rank">3</div>
+        <div class="tk"><div class="sym">ANNX</div><div class="co">Annexon</div><div class="px">$5.94 · float 163.8M · earnings 13-AGO (35d)</div></div>
+        <div class="badges"><span class="verdict v-go">ACUMULACIÓN · flujo institucional fuerte</span><span class="conv">Convicción · <b>MEDIA-ALTA</b></span></div>
+      </div>
+      <div class="opp-body">
+        <div class="levels">
+          <div class="lv pe"><div class="tag">Entrada · PE</div><div class="big">$5.54 a $5.94</div><div class="sm">Continuación en tendencia, apoyo en EMA20</div></div>
+          <div class="lv sl"><div class="tag">Stop · SL</div><div class="big">$4.25</div><div class="sm">Invalidación técnica (riesgo $1.69/acc)</div></div>
+          <div class="lv tp"><div class="tag">Objetivos · TP</div>
+            <div class="tps"><div class="t"><b>$9.83</b> <span class="rr">T1 · R/R 2.3</span></div><div class="t"><b>$11.86</b> <span class="rr">T2 · 3.5</span></div><div class="t"><b>$16.08</b> <span class="rr">T3 · 6.0</span></div></div>
+          </div>
+        </div>
+        <div class="dgrid">
+          <div class="dcell"><div class="k">Estructura</div><div class="v pos">RSI 58.75 (sano)</div></div>
+          <div class="dcell"><div class="k">Vol. relativo</div><div class="v">1.15x</div></div>
+          <div class="dcell"><div class="k">Short / DTC</div><div class="v">16.1% · 9.3d</div></div>
+          <div class="dcell"><div class="k">Runway</div><div class="v">14.7 meses</div></div>
+          <div class="dcell"><div class="k">Target analistas</div><div class="v">$7 · +18%</div></div>
+          <div class="dcell"><div class="k">Consenso</div><div class="v pos">10 Buy</div></div>
+          <div class="dcell"><div class="k">Insider (90d)</div><div class="v pos">FUERTE · cluster $3.4M</div></div>
+          <div class="dcell"><div class="k">Especialistas</div><div class="v pos">Logos · Bain · BVF</div></div>
+        </div>
+        <div class="cat"><div class="h">Catalizador</div><p>Dos activos tardíos independientes: <b>ARCHER II Fase 3 en atrofia geográfica (vonaprument/ANX007)</b>, enrollment completo (jul-2025, &gt;630 pts), topline en <span class="date">2H 2026</span>; y <b>tanruprubart (ANX005) en Guillain-Barré</b>, Fase 3 ya positiva, MAA europea en ene-2026. El binario grande (ARCHER II) es un evento de 2H26, no de las próximas semanas. Fuente: Annexon IR vía Perplexity.</p></div>
+        <div class="pipe"><span class="lab">Pipeline</span><b>Diversificado:</b> dos programas tardíos en órganos distintos (ojo y nervio periférico), así que un fallo no hunde la tesis entera. Tanruprubart ya demostró eficacia en Fase 3. <b>Sin partnership visible</b> (retiene toda la economía, pero también todo el costo, de ahí el riesgo de dilución).</div>
+        <div class="thesis"><span class="lab">Tesis</span>Es el <b>mejor flujo de smart money</b> del grupo: insider buying <b>FUERTE</b> (cluster de 3 compras por $3.4M, con directivos comprando) y tres fondos especialistas de primer nivel (<b>Logos, Bain Life Sciences, BVF</b>) con más del 5%. Técnica sana (RSI 58.75, no extendido) que permite acumular en tendencia. El pero: el catalizador de peso es 2H26 (esto es <b>posición de acumulación, no un pop inminente</b>), hay un filing de dilución reciente y el target de analistas es bajo ($7). Se acumula cerca de EMA20 con stop bajo $4.25.</div>
+        <div class="scen">
+          <div class="sc up"><div class="h">Positivo</div><p>El flujo institucional se adelanta al topline de ARCHER II; revaloración hacia $9.83 (T1) por acumulación.</p></div>
+          <div class="sc mid"><div class="h">Intermedio</div><p>Lateraliza esperando 2H26; se sostiene la posición mientras el insider buying siga intacto.</p></div>
+          <div class="sc down"><div class="h">Negativo</div><p>Un offering diluye antes del readout, o pierde $4.25; se recorta. La dilución es el riesgo real.</p></div>
+        </div>
+        <div class="news"><div class="lab">Noticias que mueven la tesis</div><ul>
+          <li><span class="nd">24-JUL-25</span><div>ARCHER II completa enrollment (&gt;630 pts), topline 2H 2026 <span class="ns">· Annexon IR</span></div></li>
+          <li><span class="nd">08-ABR-25</span><div>Fase 3 GBS (241 pts) cumple endpoint primario en tanruprubart <span class="ns">· AAN / NeurologyLive</span></div></li>
+          <li><span class="nd">Flujo</span><div>Director Muneer Satter y otros compran ~$3.4M en mercado abierto <span class="ns">· Form 4 / EDGAR</span></div></li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- ===================== VSTM ===================== -->
+    <div class="opp">
+      <div class="opp-head">
+        <div class="rank">4</div>
+        <div class="tk"><div class="sym">VSTM</div><div class="co">Verastem Oncology</div><div class="px">$5.40 · float 87.9M · earnings 06-AGO (28d)</div></div>
+        <div class="badges"><span class="verdict v-wait">WATCH · esperar pullback</span><span class="conv">Convicción · <b>ALTA (calidad), entrada condicionada</b></span></div>
+      </div>
+      <div class="opp-body">
+        <div class="levels">
+          <div class="lv pe"><div class="tag">Entrada · PE</div><div class="big">$4.27 a $4.45</div><div class="sm">Solo en pullback. Hoy el R/R no cuadra</div></div>
+          <div class="lv sl"><div class="tag">Stop · SL</div><div class="big">$3.23</div><div class="sm">Invalidación técnica (riesgo $1.22/acc)</div></div>
+          <div class="lv tp"><div class="tag">Objetivos · TP</div>
+            <div class="tps"><div class="t"><b>$6.69</b> <span class="rr">T1 · R/R 1.84</span></div><div class="t"><b>$8.71</b> <span class="rr">T2 · 3.5</span></div><div class="t"><b>$11.77</b> <span class="rr">T3 · 6.0</span></div></div>
+          </div>
+        </div>
+        <div class="dgrid">
+          <div class="dcell"><div class="k">Estructura</div><div class="v warn">Ext. · bajo SMA200</div></div>
+          <div class="dcell"><div class="k">Vol. relativo</div><div class="v pos">1.73x</div></div>
+          <div class="dcell"><div class="k">Short / DTC</div><div class="v pos">24.8% · 8.9d</div></div>
+          <div class="dcell"><div class="k">Runway</div><div class="v">14.4 meses</div></div>
+          <div class="dcell"><div class="k">Target analistas</div><div class="v pos">$15.2 · +181%</div></div>
+          <div class="dcell"><div class="k">Consenso</div><div class="v pos">15 Buy · 4 Hold</div></div>
+          <div class="dcell"><div class="k">Especialistas</div><div class="v pos">OrbiMed · BVF</div></div>
+          <div class="dcell"><div class="k">Insider (90d)</div><div class="v neg">Solo ventas (6)</div></div>
+        </div>
+        <div class="cat"><div class="h">Catalizador</div><p><b>AVMAPKI FAKZYNJA (avutometinib + defactinib)</b> ya aprobado (may-2025) para cáncer de ovario seroso de bajo grado con mutación KRAS: fase de <b>lanzamiento comercial</b>. El confirmatorio Fase 3 RAMP-301 da topline a mediados de 2027 (lejano). Segundo motor: <b>VS-7375 (KRAS G12D)</b>, Fast Track en páncreas y datos tempranos alentadores (jun-2026). No hay binario datable en 15 a 60 días. Fuente: Verastem IR vía Perplexity.</p></div>
+        <div class="pipe"><span class="lab">Pipeline</span><b>Dos franquicias</b> (avutometinib comercial + VS-7375 en KRAS G12D), lo que da algo de diversificación. <b>Partner:</b> GenFleet (licencia de VS-7375 ex-China), cuyos datos en páncreas (~41% ORR) de-riesgan el objetivo. Riesgo de dilución por financiar Fase 3 más lanzamiento.</div>
+        <div class="thesis"><span class="lab">Tesis</span>La <b>mayor asimetría teórica</b> del grupo (target +181%, 15 Buy, OrbiMed y BVF dentro, short del 24.8% como combustible de squeeze), pero el motor dice <b>WATCH</b>: a $5.40 el R/R a T1 es solo 1.84 y el precio está <b>por debajo de su SMA200</b> (estructura aún bajista), con insiders vendiendo. No hay catalizador binario inminente. Se espera el <b>pullback a $4.27 a $4.45</b>, donde el R/R supera 2:1 y el short da asimetría real. Calidad alta, pero la entrada manda.</div>
+        <div class="scen">
+          <div class="sc up"><div class="h">Positivo</div><p>Pullback a $4.27 a $4.45 y rebote; el short del 24.8% acelera hacia $6.7 a $8.7 (T1 a T2).</p></div>
+          <div class="sc mid"><div class="h">Intermedio</div><p>Sigue extendido sin dar la entrada limpia; se espera y no se persigue.</p></div>
+          <div class="sc down"><div class="h">Negativo</div><p>Rechazo en SMA200 y pierde $3.23; el lanzamiento decepciona. Sin entrada, no hay operación.</p></div>
+        </div>
+        <div class="news"><div class="lab">Noticias que mueven la tesis</div><ul>
+          <li><span class="nd">23-JUN-26</span><div>VS-7375: datos Fase 1/2 alentadores en tumores KRAS G12D (páncreas, colon, pulmón) <span class="ns">· Verastem IR</span></div></li>
+          <li><span class="nd">ABR-26</span><div>Seguimiento a 2 años de AVMAPKI FAKZYNJA en LGSOC (mPFS 22.0m en KRAS-mut) <span class="ns">· Verastem IR</span></div></li>
+          <li><span class="nd">08-MAY-25</span><div>Aprobación FDA del co-pack en LGSOC con mutación KRAS <span class="ns">· Verastem IR</span></div></li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- ===================== ABEO ===================== -->
+    <div class="opp">
+      <div class="opp-head">
+        <div class="rank">5</div>
+        <div class="tk"><div class="sym">ABEO</div><div class="co">Abeona Therapeutics</div><div class="px">$7.10 · float 57.0M · earnings 13-AGO (35d)</div></div>
+        <div class="badges"><span class="verdict v-wait">SETUP VÁLIDO · esperar pullback</span><span class="conv">Convicción · <b>MEDIA</b></span></div>
+      </div>
+      <div class="opp-body">
+        <div class="levels">
+          <div class="lv pe"><div class="tag">Entrada · PE</div><div class="big">$5.97 a $6.21</div><div class="sm">Pullback a EMA20. Está extendido (RSI 77)</div></div>
+          <div class="lv sl"><div class="tag">Stop · SL</div><div class="big">$5.13</div><div class="sm">Invalidación técnica (riesgo $1.08/acc)</div></div>
+          <div class="lv tp"><div class="tag">Objetivos · TP</div>
+            <div class="tps"><div class="t"><b>$8.45</b> <span class="rr">T1 · R/R 2.07</span></div><div class="t"><b>$10.41</b> <span class="rr">T2 · 3.9</span></div><div class="t"><b>$12.69</b> <span class="rr">T3 · 6.0</span></div></div>
+          </div>
+        </div>
+        <div class="dgrid">
+          <div class="dcell"><div class="k">Estructura</div><div class="v warn">Extendido (RSI 77.6)</div></div>
+          <div class="dcell"><div class="k">Vol. relativo</div><div class="v pos">2.0x</div></div>
+          <div class="dcell"><div class="k">Short / DTC</div><div class="v pos">24.8% · 16.4d</div></div>
+          <div class="dcell"><div class="k">Runway</div><div class="v pos">26.0 meses</div></div>
+          <div class="dcell"><div class="k">Target analistas</div><div class="v pos">$17 · +139%</div></div>
+          <div class="dcell"><div class="k">Consenso</div><div class="v">6 Buy · 3 Hold</div></div>
+          <div class="dcell"><div class="k">Especialistas</div><div class="v pos">Point72 · Adage</div></div>
+          <div class="dcell"><div class="k">Insider (mismo día)</div><div class="v neg">Cúpula vendió $4.3M</div></div>
+        </div>
+        <div class="cat"><div class="h">Catalizador</div><p><b>ZEVASKYN (pz-cel)</b> ya está aprobado (abr-2025) para epidermólisis bullosa (RDEB): no es un binario pendiente sino una <b>historia de ejecución comercial</b> (activación de centros QTC, primeras infusiones). Suma la <b>monetización del Priority Review Voucher</b> (cientos de millones no dilutivos, potencial) y royalties de UX111 (socio Ultragenyx, PDUFA 18-ago). Fuente: Abeona IR vía Perplexity.</p></div>
+        <div class="pipe"><span class="lab">Pipeline</span><b>Concentrado en ZEVASKYN</b> a corto plazo; el resto (AAV oftalmología, ABO-701 en próstata) es preclínico/temprano. <b>Optionalidad no dilutiva:</b> venta del PRV y milestones/royalties de UX111 vía Ultragenyx. No es ya un solo PDUFA, pero sigue siendo una historia de un activo comercial.</div>
+        <div class="thesis"><span class="lab">Tesis</span>Tiene combustible: <b>short del 24.8% con 16.4 días de cobertura</b> (squeeze real con catalizador), especialistas de calidad (Point72, Adage), runway de 26 meses y la opción del <b>PRV</b>. Pero pesa una bandera clara: el <b>9 de julio toda la cúpula (CEO, CFO, CCO, CLO) vendió ~$4.3M el mismo día</b>, y el precio está muy extendido (RSI 77.6). El catalizador es comercial, no un evento binario datable a 15 a 60 días. Se espera el <b>pullback a $5.97 a $6.21</b>; entrar aquí es FOMO.</div>
+        <div class="scen">
+          <div class="sc up"><div class="h">Positivo</div><p>Pullback y rebote; la rampa de ZEVASKYN más venta del PRV empujan el squeeze hacia $8.45 a $10.41.</p></div>
+          <div class="sc mid"><div class="h">Intermedio</div><p>Consolida la subida reciente cerca de EMA20; se espera la entrada, no se persigue.</p></div>
+          <div class="sc down"><div class="h">Negativo</div><p>La venta de la cúpula anticipa debilidad y pierde $5.13; se descarta. El insider selling manda la cautela.</p></div>
+        </div>
+        <div class="news"><div class="lab">Noticias que mueven la tesis</div><ul>
+          <li><span class="nd">09-JUL-26</span><div>CEO, CFO, CCO y CLO venden ~$4.3M el mismo día a $6.96 <span class="ns">· Form 4 / EDGAR</span></div></li>
+          <li><span class="nd">3T 2025</span><div>Lanzamiento de ZEVASKYN: activación de centros QTC (CHOP, Columbia) <span class="ns">· Abeona IR</span></div></li>
+          <li><span class="nd">18-AGO-25</span><div>PDUFA de UX111 en Ultragenyx (royalty/milestone para Abeona) <span class="ns">· Abeona IR</span></div></li>
+        </ul></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span> Excluidas, y por qué</h2>
+    <p class="h2note">Nada se deja caer en silencio. Estas tres pasaron la pantalla de momentum pero no llegan al reporte.</p>
+    <div class="excl">
+      <div class="row"><div class="esym">TENX</div><div class="ewhy">Tenax Therapeutics. El motor la marca <b>convicción BAJA con bandera de dilución</b>, y la investigación lo confirma: es un <b>binario one-shot</b> alrededor de la Fase 3 LEVEL (levosimendan oral en PH-HFpEF) cuyo topline es 2H 2026, no un evento de 15 a 60 días. El segundo activo (imatinib TNX-201) está frenado por falta de capital, con historial de going-concern. Riesgo binario más dilución, sin catalizador cercano: WATCH.</div></div>
+      <div class="row"><div class="esym">DMRA</div><div class="ewhy">Identidad no verificable en fuentes públicas ("Damora Therapeutics") y el motor levanta un <b>runway atípico de 156 meses</b> (burn casi nulo o dato raro que exige verificación, no un "sin riesgo"). Sin poder confirmar la compañía ni un catalizador clínico real, no se puede fundamentar una tesis. Se excluye por falta de verificación.</div></div>
+      <div class="row"><div class="esym">HELP</div><div class="ewhy">Conflicto de identidad: el símbolo aparece con nombres distintos entre fuentes (perfil "Cybin Inc." frente a "Helus Pharma" en la pantalla). Sin una identidad única y verificable, <b>no hay catalizador investigable</b> con confianza. Se excluye hasta reconciliar la fuente de datos.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span> Nota de datos y método</h2>
+    <div class="disc"><b>Procedencia.</b> Los niveles (precio, técnicos, entrada, stop, objetivos, R/R), el short interest, el insider Form 4 (compras y ventas), las tenencias 13D/13G, el runway, los targets de analistas y el earnings provienen del <b>motor Hedge-Fund-AI</b> (Massive/Polygon, Finviz Elite, FMP, SEC EDGAR) al <b>09-JUL-2026</b>, calculados de forma reproducible, no a ojo. El <b>catalizador clínico, la calidad del pipeline y los partnerships</b> se investigaron en vivo por web (Perplexity) y se citan con su fuente. Varias entradas están <b>condicionadas a una confirmación</b> (ruptura o pullback): son planes, no señales de comprar ahora. <b>No es consejo financiero;</b> los precios, fechas de catalizadores y el short interest cambian, y el stop no protege ante gaps. Verificar el catalizador y confirmar con volumen antes de operar.</div>
+  </section>
+
+  <footer>
+    <span>Hedge-Fund-AI · uso educativo, no es consejo financiero</span>
+    <span>09-JUL-2026 · motor: Massive · Finviz · FMP · EDGAR · catalizador: web</span>
+  </footer>
+
+</article>
+</body>
+</html>
