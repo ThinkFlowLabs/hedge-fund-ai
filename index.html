@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La estrategia, en simple · Hedge-Fund-AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f5; --doc:#ffffff;
+    --ink:#101a2e; --ink-2:#33404d; --muted:#6b7580; --faint:#93a0ad;
+    --line:#e4e7ec; --line-2:#eef0f2;
+    --blue:#1d4ed8; --blue-deep:#1e3a8a; --blue-tint:#eef4ff;
+    --amber:#b45309; --amber-tint:#fef7ec;
+    --red:#c2410c; --green:#047857;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;line-height:1.6}
+
+  .doc{
+    max-width:840px;margin:34px auto;background:var(--doc);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(16,30,26,.04),0 24px 60px -34px rgba(16,30,26,.22);
+  }
+  .pad{padding:46px 56px}
+
+  /* header band · dark image hero */
+  .head{padding:62px 56px 54px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+        min-height:360px;display:flex;flex-direction:column;justify-content:center;
+        background-color:#030712;
+        background-image:linear-gradient(94deg, rgba(3,7,18,.92) 0%, rgba(3,7,18,.66) 34%, rgba(3,7,18,.2) 62%, rgba(3,7,18,0) 82%),
+                         url('assets/hero-wireframe-blue.jpg');
+        background-size:cover;background-position:center center}
+  .head::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;z-index:2;
+        background:linear-gradient(90deg,var(--blue),#3b82f6 60%,#7fb2ff)}
+  .head > *{position:relative;z-index:1}
+  .eyebrow{display:flex;align-items:center;gap:9px;font-family:"IBM Plex Mono",monospace;
+        font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7fb2ff;font-weight:500}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#7fb2ff;box-shadow:0 0 12px #7fb2ff}
+  h1{font-family:"Fraunces",serif;font-weight:700;font-size:48px;line-height:1.03;
+        letter-spacing:-.02em;margin:18px 0 14px;color:#ffffff;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+  h1 em{font-style:italic;color:#7fb2ff}
+  .sub{font-size:16px;color:#cdd9ee;max-width:56ch;line-height:1.55}
+  .sub em{color:#9dc0ff;font-style:italic}
+  .meta{margin-top:20px;display:flex;gap:26px;flex-wrap:wrap;font-size:12.5px;color:#93a6c6}
+  .meta b{color:#fff}
+
+  section{padding:34px 56px;border-top:1px solid var(--line-2)}
+  h2{font-family:"Fraunces",serif;font-weight:600;font-size:23px;letter-spacing:-.01em;color:var(--ink);
+        margin-bottom:6px;display:flex;align-items:baseline;gap:12px}
+  h2 .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--blue);font-weight:500;letter-spacing:.05em}
+  .h2note{font-size:14.5px;color:var(--muted);margin-bottom:20px;max-width:64ch}
+
+  p{font-size:15px;color:var(--ink-2)}
+  .lead{font-size:16.5px;color:var(--ink-2);text-align:justify;hyphens:auto}
+  .lead b{color:var(--ink);font-weight:600}
+  strong,b{color:var(--ink)}
+
+  /* pieces list */
+  .pieces{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+  .piece{display:flex;gap:16px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;
+        background:#fcfdff;transition:none}
+  .piece .num{flex-shrink:0;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);
+        color:var(--blue-deep);font-weight:700;font-size:15px;display:grid;place-items:center;
+        font-family:"Fraunces",serif;border:1px solid #d3e0fb}
+  .piece h4{font-size:15.5px;color:var(--ink);margin-bottom:2px;font-weight:600}
+  .piece p{font-size:13.5px;color:var(--muted);line-height:1.5;text-align:justify;hyphens:auto}
+  .piece .src{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--blue);
+        background:var(--blue-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
+
+  .rule-of-thumb{margin-top:18px;padding:14px 18px;border-radius:11px;background:var(--blue-tint);
+        border:1px solid #d3e0fb;font-size:14.5px;color:var(--blue-deep)}
+  .rule-of-thumb b{color:var(--blue-deep)}
+
+  /* entry/exit trio */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+  .lvl{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fcfdff}
+  .lvl .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:7px}
+  .lvl.pe{border-top:3px solid var(--blue)} .lvl.pe .tag{color:var(--blue)}
+  .lvl.sl{border-top:3px solid var(--red)} .lvl.sl .tag{color:var(--red)}
+  .lvl.tp{border-top:3px solid var(--green)} .lvl.tp .tag{color:var(--green)}
+  .lvl h4{font-family:"Fraunces",serif;font-size:18px;font-weight:600;margin-bottom:5px;color:var(--ink)}
+  .lvl p{font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* example */
+  .example{display:flex;gap:20px;align-items:flex-start;padding:24px 26px;border-radius:14px;
+        background:linear-gradient(180deg,#fcfdff,#f4f7fd);border:1px solid var(--line)}
+  .example .ticker{flex-shrink:0;font-family:"Fraunces",serif;font-weight:700;font-size:26px;color:var(--blue-deep);
+        background:#fff;border:1px solid #d3e0fb;border-radius:12px;padding:14px 16px;letter-spacing:-.01em;text-align:center;line-height:1}
+  .example .ticker small{display:block;font-family:"Inter";font-weight:500;font-size:10px;letter-spacing:.08em;
+        text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .example p{font-size:14.5px;color:var(--ink-2);text-align:justify;hyphens:auto}
+  .example .warn{margin-top:8px;font-size:13px;color:var(--amber);background:var(--amber-tint);
+        border-radius:8px;padding:8px 12px}
+
+  /* different */
+  .diff{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:4px}
+  .diff > div{padding:20px 22px}
+  .diff .them{background:#faf7f5;border-right:1px solid var(--line)}
+  .diff .us{background:var(--blue-tint)}
+  .diff .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+  .diff .them .lab{color:var(--muted)} .diff .us .lab{color:var(--blue-deep)}
+  .diff p{font-size:14px;color:var(--ink-2)}
+  .diff .us p{color:var(--blue-deep)}
+
+  /* data sources / API wiring */
+  .sources{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:4px}
+  .source{border:1px solid var(--line);border-radius:12px;padding:15px 17px;background:#fcfdff}
+  .source.catalyst{grid-column:1/-1;background:var(--amber-tint);border-color:#f3e2c8}
+  .src-h{display:flex;align-items:baseline;gap:9px;margin-bottom:6px}
+  .src-name{font-family:"Fraunces",serif;font-weight:600;font-size:16px;color:var(--blue-deep)}
+  .source.catalyst .src-name{color:var(--amber)}
+  .src-sub{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .source p{font-size:13px;color:var(--ink-2);line-height:1.5;text-align:justify;hyphens:auto}
+  .flow{margin-top:16px;padding:15px 18px;border-radius:12px;background:#101a2e;color:#cddcf5;
+        font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.7;letter-spacing:.02em}
+  .flow b{color:#7fb2ff;font-weight:500} .flow .arw{color:#3b82f6;margin:0 6px}
+
+  /* closer block */
+  .closer{background:var(--blue-tint);border:1px solid #d3e0fb;border-left:3px solid var(--blue);
+        border-radius:12px;padding:22px 26px}
+  .closer p{font-size:16px;line-height:1.65;color:var(--ink-2);text-align:justify;hyphens:auto}
+  .closer b{color:var(--blue-deep)}
+
+  footer{padding:24px 56px 34px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;
+        display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
+
+  @media(max-width:720px){
+    .doc{margin:0;border-radius:0;border:none}
+    .head,.pad{padding-left:24px;padding-right:24px} section{padding-left:24px;padding-right:24px}
+    footer{padding-left:24px;padding-right:24px}
+    h1{font-size:34px}
+    .trio,.diff{grid-template-columns:1fr}
+    .example{flex-direction:column}
+  }
+  @media print{
+    body{background:#fff} .doc{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0}
+    @page{margin:14mm}
+    section,.head{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<article class="doc">
+
+  <header class="head">
+    <div class="eyebrow"><span class="dot"></span> Hedge-Fund-AI · Playbook</div>
+    <h1>La estrategia, <em>en simple</em></h1>
+    <p class="sub">Metodología de swing trading por catalizadores en el sector biotecnológico. Identificamos oportunidades de <em>alta asimetría</em> (potencial de +50% a +300% en ventanas de días a semanas) que emergen cuando varias señales verificables convergen alrededor de un evento clínico o regulatorio datable. Sin una razón fundamentada para el movimiento, no hay operación.</p>
+    <div class="meta"><span>Proyecto · <b>Hedge-Fund-AI</b></span><span>Horizonte · <b>días a semanas</b></span><span>Objetivo · <b>+50% a +300%</b></span></div>
+  </header>
+
+  <section>
+    <h2><span class="idx">01</span> La idea</h2>
+    <p class="lead">Las biotecnológicas de pequeña capitalización se mueven por <b>eventos binarios</b>: la aprobación o el rechazo de un fármaco puede duplicar o hundir la acción en horas. Ese perfil binario es a la vez el riesgo y la oportunidad. La estrategia no apuesta a un solo evento; exige que <b>varias condiciones independientes converjan</b> antes de comprometer capital: solidez financiera, acumulación de insiders e institucionales, confirmación por volumen, un pipeline diversificado con un catalizador cercano y datable, y una estructura de precio favorable. Cada condición que se cumple recorta el riesgo a la baja y ensancha la asimetría al alza. <b>La confluencia es la ventaja; una señal aislada nunca basta.</b></p>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span> Las 5 piezas que buscamos</h2>
+    <p class="h2note">Cuando se cumplen 4 o 5 de estas, es un candidato real. Cada una la vemos con datos, no a ojo.</p>
+    <div class="pieces">
+      <div class="piece"><div class="num">1</div><div>
+        <h4>Solidez financiera y bajo riesgo de dilución <span class="src">cash runway · FMP</span></h4>
+        <p>Runway de 12+ meses (caja e inversiones de corto plazo ÷ quema trimestral real). Con caja suficiente, es poco probable que la empresa emita acciones antes del catalizador; una dilución (offering o ATM) presiona el precio justo cuando esperamos que suba. Runway corto = riesgo de dilución → se descarta o se degrada.</p></div></div>
+      <div class="piece"><div class="num">2</div><div>
+        <h4>Acumulación de insiders e institucionales <span class="src">Form 4 · 13D/13G · EDGAR</span></h4>
+        <p>Compras de directivos en mercado abierto (Form 4) y posiciones sobre el 5% de fondos especializados en biotech (13D/13G vía SEC EDGAR). Un CEO o CFO comprando, o un fondo como Baker Bros o RA Capital tomando posición, es capital con información y convicción. Ventas fuertes de la cúpula son bandera roja que puede invalidar la tesis.</p></div></div>
+      <div class="piece"><div class="num">3</div><div>
+        <h4>Confirmación por volumen <span class="src">vol. relativo</span></h4>
+        <p>Volumen relativo por encima de 1.5× (idealmente 3× o más el promedio) señala entrada de dinero institucional, no ruido minorista. El volumen es la única variable que no se puede fingir: confirma que el interés es real y suele preceder al movimiento del precio. Una ruptura sin volumen no es fiable.</p></div></div>
+      <div class="piece"><div class="num">4</div><div>
+        <h4>Catalizador FDA cercano + pipeline diversificado <span class="src">research FDA</span></h4>
+        <p>Un catalizador datable en los próximos 15 a 60 días: una fecha PDUFA o un readout de Fase 2/3. Y crítico: la empresa <b>no debe depender de una sola aprobación binaria</b>; un pipeline con varios programas en distintas fases reparte el riesgo, y si un fármaco falla, la tesis no se derrumba. Un acuerdo con Big Pharma o financiación no dilutiva añade validación y reduce el riesgo.</p></div></div>
+      <div class="piece"><div class="num">5</div><div>
+        <h4>Estructura de precio en base <span class="src">técnico</span></h4>
+        <p>El precio debe venir de una fase de lateralización (acumulación): un rango estrecho tras una caída, donde el papel cambia de manos antes de un movimiento. Entramos en la ruptura de esa base o en el retroceso a la media, nunca persiguiendo una acción ya extendida. Comprar en euforia (FOMO) es asumir el riesgo justo cuando la asimetría ya desapareció.</p></div></div>
+    </div>
+    <div class="rule-of-thumb"><b>Regla práctica:</b> 4-5 piezas alineadas = entrar al análisis profundo. Menos de 4 = seguir buscando.</div>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span> Cómo entramos y salimos</h2>
+    <p class="h2note">El tamaño de la posición lo define el stop, no el capital. Vendemos en partes: asegurar, dejar correr.</p>
+    <div class="trio">
+      <div class="lvl pe"><div class="tag">Entrada · PE</div><h4>En la ruptura</h4><p>En la ruptura de la lateralización con volumen, o en el retroceso a la media (EMA20). Nunca perseguir un precio ya extendido.</p></div>
+      <div class="lvl sl"><div class="tag">Stop · SL</div><h4>Bajo el piso</h4><p>Por debajo del piso de la base, donde la idea queda invalidada. No un porcentaje al azar. Ojo: ante un gap, el stop no siempre protege.</p></div>
+      <div class="lvl tp"><div class="tag">Objetivos · TP</div><h4>2 a 3× el riesgo</h4><p>En resistencias previas / Fibonacci, buscando ganar al menos 2-3 veces lo arriesgado (R/R ≥ 2:1). Se vende en tercios.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span> Un ejemplo: RLMD</h2>
+    <div class="example">
+      <div class="ticker">RLMD<small>Relmada</small></div>
+      <div>
+        <p><b>RLMD venía de una lateralización</b> tras una caída, con catalizador clínico y volumen creciente. Cuando rompió, disparó fuerte (+1250% en su momento). Es el arquetipo del setup: <b>base + catalizador + volumen + insiders</b>.</p>
+        <div class="warn">⚠ Y enseña el otro lado: después se desplomó por un fallo de Fase 3. Por eso importan el stop, los objetivos parciales y el pipeline diversificado.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span> El motor: de dónde sale cada dato</h2>
+    <p class="h2note">La estrategia solo funciona con datos reales. Cinco fuentes se conectan y se unen en un solo comando (<span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--blue)">cli.py recommend</span>). Ninguna cifra se inventa.</p>
+    <div class="sources">
+      <div class="source">
+        <div class="src-h"><span class="src-name">Massive</span><span class="src-sub">Polygon.io · tiempo real</span></div>
+        <p>Precio en vivo, velas, técnicos (RSI, EMA, SMA, MACD), float, short interest y days-to-cover.</p>
+      </div>
+      <div class="source">
+        <div class="src-h"><span class="src-name">Finviz Elite</span><span class="src-sub">screener + filings</span></div>
+        <p>Las dos pantallas de descubrimiento (biotech y momentum), insider Form 4, opciones (greeks/IV), volumen relativo, SEC filings frescos y noticias del ticker.</p>
+      </div>
+      <div class="source">
+        <div class="src-h"><span class="src-name">FMP</span><span class="src-sub">fundamentales</span></div>
+        <p>Cash real → runway preciso, targets de analistas + % de upside, grados Buy/Hold/Sell y la fecha del próximo earnings.</p>
+      </div>
+      <div class="source">
+        <div class="src-h"><span class="src-name">SEC EDGAR</span><span class="src-sub">institucional · gratis</span></div>
+        <p>Los 13D/13G con el filer REAL + clasificación: fondo biotech especialista (Baker Bros, RA, Point72) = señal; índice pasivo (Vanguard) = ruido.</p>
+      </div>
+      <div class="source catalyst">
+        <div class="src-h"><span class="src-name">Research FDA</span><span class="src-sub">Perplexity / Brave · web</span></div>
+        <p>Lo único que NO es dato de mercado: el catalizador. Calendario PDUFA, fase clínica y readouts se investigan en vivo y se citan con fuente. Sin catalizador datable, el candidato baja a WATCH.</p>
+      </div>
+    </div>
+    <div class="flow">
+      5 fuentes de datos <span class="arw">→</span> <b>cli.py recommend &lt;TICKER&gt;</b> las une y calcula PE / SL / TP + R/R <span class="arw">→</span> se investiga el <b>catalizador FDA</b> <span class="arw">→</span> juicio humano <span class="arw">→</span> <b>veredicto + reporte</b>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">06</span> Qué nos hace distintos</h2>
+    <div class="closer">
+      <p>Cada cifra de este análisis proviene de <b>datos de mercado reales y verificables</b>: precio, técnicos, short interest, insider Form 4, tenencias institucionales (13D/13G vía SEC EDGAR), caja, targets de analistas y earnings, todo reunido por un motor que calcula la entrada, el stop y los objetivos de forma reproducible. El único componente cualitativo, el <b>catalizador clínico y la calidad del pipeline</b>, se investiga en vivo y se cita con su fuente. El resultado son decisiones fundamentadas y auditables, no estimaciones a ojo. <b>Menos adivinar, más decidir.</b></p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Hedge-Fund-AI · uso educativo, no es consejo financiero</span>
+    <span>09-JUL-2026 · datos: Massive · Finviz · FMP · EDGAR</span>
+  </footer>
+
+</article>
+</body>
+</html>
